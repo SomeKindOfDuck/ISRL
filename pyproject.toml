@@ -17,6 +17,7 @@ build-backend = "uv_build"
 
 [project.scripts]
 incentive-learning = "isrl.sim.incentive_learning:main"
+goal-directed = "isrl.sim.goal_directed:main"
 
 [dependency-groups]
 dev = [
