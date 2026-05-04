@@ -1,0 +1,27 @@
+[project]
+name = "isrl"
+version = "0.1.0"
+description = "Add your description here"
+readme = "README.md"
+requires-python = ">=3.12"
+dependencies = [
+    "matplotlib>=3.10.8",
+    "numpy>=2.4.4",
+    "pandas>=3.0.2",
+    "scipy>=1.17.1",
+]
+
+[build-system]
+requires = ["uv_build"]
+build-backend = "uv_build"
+
+[project.scripts]
+incentive-learning = "isrl.sim.incentive_learning:main"
+
+[dependency-groups]
+dev = [
+    "ipython>=9.6.0",
+    "isort>=8.0.1",
+    "python-language-server[all]>=0.36.2",
+    "yapf>=0.43.0",
+]
