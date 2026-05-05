@@ -220,10 +220,10 @@ def main():
         weights = extract_model_weights(agent, model_params)
 
         results.to_csv(
-            f"{out_dir}/goal-directed-results-{param_str}.csv", index=False
+            f"{out_dir}/results-{param_str}.csv", index=False
         )
         weights.to_csv(
-            f"{out_dir}/goal-directed-weights-{param_str}.csv", index=False
+            f"{out_dir}/weights-{param_str}.csv", index=False
         )
 
 if __name__ == "__main__":

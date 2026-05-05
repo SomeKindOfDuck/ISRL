@@ -215,52 +215,52 @@ def main():
     hst_params, cvt_params, ext_params, model_params, preview = parse_args()
 
     # 高遮断化状態でUSの摂取後に中程度の遮断化レベルで道具的条件づけの訓練した場合
-    (high2low_experimental_data, high2low_control_data), (high2low_experimental_agent, high2low_control_agent) = incentive_learning_experiment(hst_params, cvt_params, ext_params, 0, 60, 5, 60, 60, 12, model_params)
+    (high2low_experimental_results, high2low_control_results), (high2low_experimental_agent, high2low_control_agent) = incentive_learning_experiment(hst_params, cvt_params, ext_params, 0, 60, 5, 60, 60, 12, model_params)
 
     # 低遮断化状態でUSの摂取後に高程度の遮断化レベルで道具的条件づけの訓練した場合
-    (low2high_experimental_data, low2high_control_data), (low2high_experimental_agent, low2high_control_agent) = incentive_learning_experiment(hst_params, cvt_params, ext_params, 120, 60, 5, 0, 60, 12, model_params)
+    (low2high_experimental_results, low2high_control_results), (low2high_experimental_agent, low2high_control_agent) = incentive_learning_experiment(hst_params, cvt_params, ext_params, 120, 60, 5, 0, 60, 12, model_params)
 
     if preview:
-        plot_preview(high2low_experimental_data, high2low_control_data,
-                     low2high_experimental_data, low2high_control_data)
+        plot_preview(high2low_experimental_results, high2low_control_results,
+                     low2high_experimental_results, low2high_control_results)
     else:
-        out_dir = "./data/inctv"
+        out_dir = "./data/incentive-learning"
         param_str = "-".join([f"{k}={v}" for k, v in model_params.items()])
 
         os.makedirs(out_dir, exist_ok=True)
 
         print(f"Running simulation with parameters = {param_str}")
 
-        high2low_experimental_weight = extract_model_weights(high2low_experimental_agent, model_params)
-        high2low_control_weight = extract_model_weights(high2low_control_agent, model_params)
-        low2high_experimental_weight = extract_model_weights(low2high_experimental_agent, model_params)
-        low2high_control_weight = extract_model_weights(low2high_control_agent, model_params)
+        high2low_experimental_weights = extract_model_weights(high2low_experimental_agent, model_params)
+        high2low_control_weights = extract_model_weights(high2low_control_agent, model_params)
+        low2high_experimental_weights = extract_model_weights(low2high_experimental_agent, model_params)
+        low2high_control_weights = extract_model_weights(low2high_control_agent, model_params)
 
-        high2low_experimental_data.to_csv(
-            f"{out_dir}/high2low-experimental-{param_str}.csv", index=False
+        high2low_experimental_results.to_csv(
+            f"{out_dir}/high2low-experimental-results-{param_str}.csv", index=False
         )
-        high2low_control_weight.to_csv(
+        high2low_control_weights.to_csv(
             f"{out_dir}/high2low-experimental-weights-{param_str}.csv", index=False
         )
 
-        high2low_control_data.to_csv(
-            f"{out_dir}/high2low-control-{param_str}.csv", index=False
+        high2low_control_results.to_csv(
+            f"{out_dir}/high2low-control-results-{param_str}.csv", index=False
         )
-        high2low_control_weight.to_csv(
+        high2low_control_weights.to_csv(
             f"{out_dir}/high2low-control-weights-{param_str}.csv", index=False
         )
 
-        low2high_experimental_data.to_csv(
-            f"{out_dir}/low2high-experimental-{param_str}.csv", index=False
+        low2high_experimental_results.to_csv(
+            f"{out_dir}/low2high-experimental-results-{param_str}.csv", index=False
         )
-        low2high_experimental_weight.to_csv(
+        low2high_experimental_weights.to_csv(
             f"{out_dir}/low2high-experimental-weights-{param_str}.csv", index=False
         )
 
-        low2high_control_data.to_csv(
-            f"{out_dir}/low2high-control-{param_str}.csv", index=False
+        low2high_control_results.to_csv(
+            f"{out_dir}/low2high-control-results-{param_str}.csv", index=False
         )
-        low2high_control_weight.to_csv(
+        low2high_control_weights.to_csv(
             f"{out_dir}/low2high-control-weights-{param_str}.csv", index=False
         )
 
