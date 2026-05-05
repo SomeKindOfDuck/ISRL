@@ -9,6 +9,7 @@ import pandas as pd
 from isrl.model import ArrayLike
 from isrl.model.isrl import (CvtParams, ExtParams, HstParams,
                              InteroceptiveStateModel)
+from isrl.sim import extract_model_weights
 
 HDIM = 2
 CDIM = 2
@@ -204,20 +205,25 @@ def main():
 
     hst_params, cvt_params, ext_params, model_params, preview = parse_args()
 
-    result, agent = goal_directed_experiment(hst_params, cvt_params, ext_params, model_params)
+    results, agent = goal_directed_experiment(hst_params, cvt_params, ext_params, model_params)
 
     if preview:
-        plot_preview(result)
+        plot_preview(results)
     else:
-        out_dir = "./data/gdir"
+        out_dir = "./data/goal-directed"
         param_str = "-".join([f"{k}={v}" for k, v in model_params.items()])
 
         os.makedirs(out_dir, exist_ok=True)
-        
+
         print(f"Running simulation with parameters = {param_str}")
 
-        result.to_csv(
-            f"{out_dir}/goal-directed-{param_str}.csv", index=False
+        weights = extract_model_weights(agent, model_params)
+
+        results.to_csv(
+            f"{out_dir}/goal-directed-results-{param_str}.csv", index=False
+        )
+        weights.to_csv(
+            f"{out_dir}/goal-directed-weights-{param_str}.csv", index=False
         )
 
 if __name__ == "__main__":

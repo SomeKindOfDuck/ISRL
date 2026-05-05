@@ -8,6 +8,7 @@ import pandas as pd
 
 from isrl.model.isrl import (CvtParams, ExtParams, HstParams,
                              InteroceptiveStateModel)
+from isrl.sim import extract_model_weights
 
 HDIM = 1
 CDIM = 1
@@ -227,23 +228,40 @@ def main():
         param_str = "-".join([f"{k}={v}" for k, v in model_params.items()])
 
         os.makedirs(out_dir, exist_ok=True)
-        
+
         print(f"Running simulation with parameters = {param_str}")
+
+        high2low_experimental_weight = extract_model_weights(high2low_experimental_agent, model_params)
+        high2low_control_weight = extract_model_weights(high2low_control_agent, model_params)
+        low2high_experimental_weight = extract_model_weights(low2high_experimental_agent, model_params)
+        low2high_control_weight = extract_model_weights(low2high_control_agent, model_params)
 
         high2low_experimental_data.to_csv(
             f"{out_dir}/high2low-experimental-{param_str}.csv", index=False
+        )
+        high2low_control_weight.to_csv(
+            f"{out_dir}/high2low-experimental-weights-{param_str}.csv", index=False
         )
 
         high2low_control_data.to_csv(
             f"{out_dir}/high2low-control-{param_str}.csv", index=False
         )
+        high2low_control_weight.to_csv(
+            f"{out_dir}/high2low-control-weights-{param_str}.csv", index=False
+        )
 
         low2high_experimental_data.to_csv(
             f"{out_dir}/low2high-experimental-{param_str}.csv", index=False
         )
+        low2high_experimental_weight.to_csv(
+            f"{out_dir}/low2high-experimental-weights-{param_str}.csv", index=False
+        )
 
         low2high_control_data.to_csv(
             f"{out_dir}/low2high-control-{param_str}.csv", index=False
+        )
+        low2high_control_weight.to_csv(
+            f"{out_dir}/low2high-control-weights-{param_str}.csv", index=False
         )
 
 
