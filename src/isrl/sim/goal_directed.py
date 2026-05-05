@@ -209,7 +209,17 @@ def main():
 
     if preview:
         plot_preview(result)
+    else:
+        out_dir = "./data/gdir"
+        param_str = "-".join([f"{k}={v}" for k, v in model_params.items()])
 
+        os.makedirs(out_dir, exist_ok=True)
+        
+        print(f"Running simulation with parameters = {param_str}")
+
+        result.to_csv(
+            f"{out_dir}/goal-directed-{param_str}.csv", index=False
+        )
 
 if __name__ == "__main__":
     main()
