@@ -7,9 +7,9 @@ import matplotlib.pyplot as plt
 import numpy as np
 import pandas as pd
 
+from isrl.model import ArrayLike
 from isrl.model.isrl import (CvtParams, ExtParams, HstParams,
                              InteroceptiveStateModel)
-from isrl.model import ArrayLike
 
 HDIM = 2
 CDIM = 2
