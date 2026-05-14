@@ -75,7 +75,8 @@ class CovertResponseModule(object):
 
     def set_current_points(
             self,
-            current_point: ArrayLike
+            current_point: ArrayLike,
+            overwrte: bool = True
     ):
         """与えられた引数を現在のホメオスタシス状態として上書きする
 
@@ -83,10 +84,12 @@ class CovertResponseModule(object):
 
         """
         current_point = np.asarray(current_point, dtype=float).reshape(-1)
-        # if len(current_point) != self._c_dim:
-        #     raise ValueError(f"current points must have length h_dim={self._c_dim}.")
-        # self._current_point = (1 - self._tau) * current_point + self._current_point * self._tau
-        self._current_point = current_point
+        if len(current_point) != self._c_dim:
+            raise ValueError(f"current points must have length h_dim={self._c_dim}.")
+        if overwrte:
+            self._current_point = current_point
+        else:
+            self._current_point = (1 - self._tau) * current_point + self._current_point * self._tau
         self._kernel = self.update_kernel()
 
     def phi_c(self) -> np.ndarray:
