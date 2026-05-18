@@ -110,17 +110,6 @@ class CovertResponseModule(object):
         # (h_dim,k) × (h_dim,k,o_dim) -> (o_dim,)
         return np.einsum("hk,hko->o", self.kernel, self._o_weights)
 
-    # def update_weight_o(self, delta: ArrayLike, action: ArrayLike):
-    #     """顕現的反応の重み更新
-
-    #     :delta: 顕現反応によって得られた報酬の予測誤差
-    #     :action: 行動のone-hot vector
-
-    #     """
-    #     delta = np.asarray(delta, dtype=float).reshape(-1)
-    #     action = np.asarray(action, dtype=float).reshape(-1)
-    #     delta = delta * action
-    #     self._o_weights += self._alpha * np.einsum("h,hk->kh", delta, self.kernel)
     def update_weight_o(self, delta: ArrayLike, action: ArrayLike):
         delta = np.asarray(delta, dtype=float).reshape(-1)
         action = np.asarray(action, dtype=float).reshape(-1)
@@ -140,14 +129,6 @@ class CovertResponseModule(object):
             delta_o
         )
 
-    # def update_weight_c(self, delta: ArrayLike):
-    #     """潜在的反応の重み更新
-
-    #     :delta: 現在の潜在的反応と誘導された反応の誤差
-
-    #     """
-    #     delta = np.asarray(delta, dtype=float).reshape(-1)
-    #     self._c_weights += self._alpha * np.einsum("h,hk->kh", delta, self.kernel)
     def update_weight_c(self, delta: ArrayLike):
         """潜在的反応の重み更新"""
         delta = np.asarray(delta, dtype=float).reshape(-1)

@@ -66,23 +66,6 @@ class ExteroceptiveModule(object):
         exteroceptive_cue = np.asarray(exteroceptive_cue, dtype=float).reshape(-1)
         return np.einsum("e,eo->o", exteroceptive_cue, self._o_weights)
 
-    # def update_weight_o(
-    #     self,
-    #     delta: ArrayLike,
-    #     action: ArrayLike,
-    #     exteroceptive_cue: ArrayLike,
-    # ):
-    #     """顕現的反応の重み更新
-
-    #     :delta: 顕現反応によって得られた報酬の予測誤差
-    #     :action: 行動のone-hot vector
-
-    #     """
-    #     delta = np.asarray(delta, dtype=float).reshape(-1)
-    #     action = np.asarray(action, dtype=float).reshape(-1)
-    #     exteroceptive_cue = np.asarray(exteroceptive_cue, dtype=float).reshape(-1)
-    #     delta = delta * action
-    #     self._o_weights += self._alpha * np.einsum("e,o->eo", exteroceptive_cue, delta)
     def update_weight_o(
         self,
         delta: ArrayLike,
