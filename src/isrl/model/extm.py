@@ -66,23 +66,59 @@ class ExteroceptiveModule(object):
         exteroceptive_cue = np.asarray(exteroceptive_cue, dtype=float).reshape(-1)
         return np.einsum("e,eo->o", exteroceptive_cue, self._o_weights)
 
+    # def update_weight_o(
+    #     self,
+    #     delta: ArrayLike,
+    #     action: ArrayLike,
+    #     exteroceptive_cue: ArrayLike,
+    # ):
+    #     """顕現的反応の重み更新
+
+    #     :delta: 顕現反応によって得られた報酬の予測誤差
+    #     :action: 行動のone-hot vector
+
+    #     """
+    #     delta = np.asarray(delta, dtype=float).reshape(-1)
+    #     action = np.asarray(action, dtype=float).reshape(-1)
+    #     exteroceptive_cue = np.asarray(exteroceptive_cue, dtype=float).reshape(-1)
+    #     delta = delta * action
+    #     self._o_weights += self._alpha * np.einsum("e,o->eo", exteroceptive_cue, delta)
     def update_weight_o(
         self,
         delta: ArrayLike,
         action: ArrayLike,
         exteroceptive_cue: ArrayLike,
     ):
-        """顕現的反応の重み更新
-
-        :delta: 顕現反応によって得られた報酬の予測誤差
-        :action: 行動のone-hot vector
-
-        """
         delta = np.asarray(delta, dtype=float).reshape(-1)
         action = np.asarray(action, dtype=float).reshape(-1)
         exteroceptive_cue = np.asarray(exteroceptive_cue, dtype=float).reshape(-1)
-        delta = delta * action
-        self._o_weights += self._alpha * np.einsum("e,o->eo", exteroceptive_cue, delta)
+
+        if exteroceptive_cue.size != self._e_dim:
+            raise ValueError(
+                f"exteroceptive_cue must have length e_dim={self._e_dim}. "
+                f"Got {exteroceptive_cue.size}."
+            )
+
+        if action.size != self._o_dim:
+            raise ValueError(
+                f"action must have length o_dim={self._o_dim}. "
+                f"Got {action.size}."
+            )
+
+        if delta.size != self._o_dim:
+            raise ValueError(
+                f"delta must have length o_dim={self._o_dim}. "
+                f"Got {delta.size}."
+            )
+
+        delta_o = delta * action
+
+        self._o_weights += np.einsum(
+            "e,e,o->eo",
+            self._alpha,
+            exteroceptive_cue,
+            delta_o
+        )
 
     def update_weight_c(
         self,

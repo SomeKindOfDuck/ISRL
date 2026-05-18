@@ -46,8 +46,8 @@ class CovertResponseModule(object):
 
         self._k = k
         self._centers = np.linspace(
-            np.ones(c_dim, dtype=float),
-            np.full(c_dim, -1, dtype=float),
+            np.full(c_dim, 2., dtype=float),
+            np.full(c_dim, -1., dtype=float),
             k,
             axis=0
         ).T
@@ -140,11 +140,27 @@ class CovertResponseModule(object):
             delta_o
         )
 
+    # def update_weight_c(self, delta: ArrayLike):
+    #     """潜在的反応の重み更新
+
+    #     :delta: 現在の潜在的反応と誘導された反応の誤差
+
+    #     """
+    #     delta = np.asarray(delta, dtype=float).reshape(-1)
+    #     self._c_weights += self._alpha * np.einsum("h,hk->kh", delta, self.kernel)
     def update_weight_c(self, delta: ArrayLike):
-        """潜在的反応の重み更新
-
-        :delta: 現在の潜在的反応と誘導された反応の誤差
-
-        """
+        """潜在的反応の重み更新"""
         delta = np.asarray(delta, dtype=float).reshape(-1)
-        self._c_weights += self._alpha * np.einsum("h,hk->kh", delta, self.kernel)
+
+        if delta.size != self._c_dim:
+            raise ValueError(
+                f"delta must have length c_dim={self._c_dim}. "
+                f"Got delta={delta.size}."
+            )
+
+        self._c_weights += np.einsum(
+            "c,ck,d->ckd",
+            self._alpha,
+            self.kernel,
+            delta
+        )
